@@ -18,7 +18,25 @@
             height: 280px;
         }
         
-        .wrap img {
+        .wrap .solid-img {
+            width: 520px;
+            height: 280px;
+        }
+        
+        .wrap .solid-img .solid-list {
+            list-style: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+        }
+        
+        .wrap .solid-img .show {
+            opacity: 1;
+        }
+        
+        .wrap .solid-img .solid-list,
+        .wrap .solid-img .solid-list img {
             width: 100%;
             height: 100%;
         }
@@ -29,32 +47,128 @@
             transform: translateX(-50%);
             bottom: 20px;
             width: 70px;
-            height: 15px;
-            background-color: red;
+            height: 16px;
+            background-color: rgba(255, 255, 255, .5);
+            border-radius: 4px;
         }
         
         .wrap .nav .list {
             list-style: none;
+            margin: 3px 2px;
             float: left;
             width: 10px;
             height: 10px;
             border-radius: 50%;
             background-color: #fff;
         }
+        
+        .wrap .nav .active {
+            background-color: yellowgreen;
+        }
+        
+        #prev {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 30px;
+            height: 30px;
+            background-color: #fff;
+            cursor: pointer;
+        }
+        
+        #next {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            width: 30px;
+            height: 30px;
+            background-color: #fff;
+            cursor: pointer;
+        }
     </style>
 </head>
 
 <body>
     <div class="wrap">
-        <img src="./images/solid-001.webp" alt="">
+        <ul class="solid-img">
+            <li class="solid-list show">
+                <img src="./images/solid-001.webp" alt="">
+            </li>
+            <li class="solid-list">
+                <img src="./images/solid-002.jpg" alt="">
+            </li>
+            <li class="solid-list">
+                <img src="./images/solid-003.jpg" alt="">
+            </li>
+            <li class="solid-list">
+                <img src="./images/solid-004.jpg" alt="">
+            </li>
+            <li class="solid-list">
+                <img src="./images/solid-005.webp" alt="">
+            </li>
+        </ul>
         <ul class="nav">
-            <li class="list"></li>
+            <li class="list active"></li>
             <li class="list"></li>
             <li class="list"></li>
             <li class="list"></li>
             <li class="list"></li>
         </ul>
+        <span id='prev'>&lt;</span>
+        <span id="next">&gt;</span>
     </div>
 </body>
+<script>
+    var prev = document.getElementById('prev')
+    var next = document.getElementById('next')
+    var solidImgs = document.querySelectorAll('.solid-img .solid-list')
+    var nav = document.querySelectorAll('.nav li')
+    var wrap = document.querySelector('.wrap')
+    var timer = 0
+    var len = solidImgs.length
+        // 当前索引
+    var activeIndex = 0
+        // 即将显示的索引
+    var now = 0
+
+    function action() {
+        solidImgs[activeIndex].className = 'solid-list'
+        nav[activeIndex].className = 'list'
+
+        solidImgs[now].className = 'solid-list show'
+        nav[now].className = 'list active'
+        activeIndex = now
+    }
+    next.onclick = function() {
+        now++;
+        if (now > len - 1) {
+            now = 0;
+        }
+        action()
+    }
+    prev.onclick = function() {
+        now--;
+        if (now < 0) {
+            now = len - 1
+        }
+        action()
+    }
+    for (var i = 0; i < len; i++) {
+        nav[i].index = i;
+        nav[i].onclick = function() {
+            if (this.index != activeIndex) {
+                now = this.index
+                action()
+            }
+        }
+    }
+    timer = setInterval(next.onclick, 500)
+    wrap.onmouseenter = function() {
+        clearInterval(timer)
+    }
+    wrap.onmouseleave = function() {
+        timer = setInterval(next.onclick, 500)
+    }
+</script>
 
 </html>
